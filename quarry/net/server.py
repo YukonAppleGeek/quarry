@@ -238,6 +238,12 @@ class ServerProtocol(Protocol):
                 "protocol": protocol_version
             }
         }
+
+        if self.factory.sample_players is not None:
+            d["players"].update({"sample": []})
+            for player in self.factory.sample_players:
+                d["players"]["sample"].append({"name": player["name"], "id": player["id"]})
+
         if self.factory.favicon is not None:
             with open(self.factory.favicon) as fd:
                 d["favicon"] = "data:image/png;base64," + base64.encodestring(fd.read())
@@ -263,6 +269,7 @@ class ServerFactory(Factory):
     online_mode = True
     compression_threshold = 256
     auth_timeout = 30
+    sample_players = None
 
     def __init__(self):
         self.players = set()
